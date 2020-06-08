@@ -20,18 +20,18 @@ export class CadastroFilmesComponent implements OnInit {
   generos: Array<string>;
 
   constructor(public validacao: ValidarCamposService,
-              public dialog: MatDialog,
-              private fb: FormBuilder,
-              private filmeService: FilmesService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute) { }
+    public dialog: MatDialog,
+    private fb: FormBuilder,
+    private filmeService: FilmesService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute) { }
 
-  get f() {
+  get f() { // Responsável por retornar todos os controls
     return this.cadastro.controls;
   }
 
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.params['id'];
+    this.id = this.activatedRoute.snapshot.params['id']; //Pegando o ID passado pela rota ativa.
     if (this.id) {
       this.filmeService.visualizar(this.id)
         .subscribe((filme: Filme) => this.criarFormulario(filme));
@@ -49,7 +49,7 @@ export class CadastroFilmesComponent implements OnInit {
       return;
     }
 
-    const filme = this.cadastro.getRawValue() as Filme;
+    const filme = this.cadastro.getRawValue() as Filme; // getRawValue -> retorna os campos que o nosso FormGroup possui. Neste caso, criando os campor do tipo Filme
     if (this.id) {
       filme.id = this.id;
       this.editar(filme);
@@ -86,11 +86,12 @@ export class CadastroFilmesComponent implements OnInit {
       genero: null
     } as Filme;
   }
-
+  // Criando um modal de alerta para o "salvar" ng g c  shared/components/açerta --nospec --module
+  // Lembrar de declarar o Dialog como entryComponents -> significa que, quando a aplicação for iniciada ele já estará disponível.
   private salvar(filme: Filme): void {
-    this.filmeService.salvar(filme).subscribe(() => {
+    this.filmeService.salvar(filme).subscribe(() => { //Primeira parte do subscribe -> retorno do sucesso
       const config = {
-        data: {
+        data: { //Passando para o construtor do alerta o DATA com os valores para substituir os padrões pre-determinados
           btnSucesso: 'Ir para a listagem',
           btnCancelar: 'Cadastrar um novo filme',
           corBtnCancelar: 'primary',
@@ -98,7 +99,7 @@ export class CadastroFilmesComponent implements OnInit {
         } as Alerta
       };
       const dialogRef = this.dialog.open(AlertaComponent, config);
-      dialogRef.afterClosed().subscribe((opcao: boolean) => {
+      dialogRef.afterClosed().subscribe((opcao: boolean) => { //Verificando o retorno dialogRef(lembrando que ele é um observable) do click do dialog, se false fecha a janela e retorna para o tela de filmes, senão limpa os campos para um novo cadastro
         if (opcao) {
           this.router.navigateByUrl('filmes');
         } else {
@@ -106,17 +107,17 @@ export class CadastroFilmesComponent implements OnInit {
         }
       });
     },
-    () => {
-      const config = {
-        data: {
-          titulo: 'Erro ao salvar o registro!',
-          descricao: 'Não conseguimos salvar seu registro, favor tentar novamente mais tarde',
-          corBtnSucesso: 'warn',
-          btnSucesso: 'Fechar'
-        } as Alerta
-      };
-      this.dialog.open(AlertaComponent, config);
-    });
+      () => { //Segunda parte do subscribe -> retorno do Erro // Podendo haver uma terceira parte FINAL-> Independente de sucesso ou erro, sempre será chamada.
+        const config = {
+          data: {
+            titulo: 'Erro ao salvar o registro!',
+            descricao: 'Não conseguimos salvar seu registro, favor tentar novamente mais tarde',
+            corBtnSucesso: 'warn',
+            btnSucesso: 'Fechar'
+          } as Alerta
+        };
+        this.dialog.open(AlertaComponent, config);
+      });
   }
 
   private editar(filme: Filme): void {
@@ -130,17 +131,17 @@ export class CadastroFilmesComponent implements OnInit {
       const dialogRef = this.dialog.open(AlertaComponent, config);
       dialogRef.afterClosed().subscribe(() => this.router.navigateByUrl('filmes'));
     },
-    () => {
-      const config = {
-        data: {
-          titulo: 'Erro ao editar o registro!',
-          descricao: 'Não conseguimos editar seu registro, favor tentar novamente mais tarde',
-          corBtnSucesso: 'warn',
-          btnSucesso: 'Fechar'
-        } as Alerta
-      };
-      this.dialog.open(AlertaComponent, config);
-    });
+      () => {
+        const config = {
+          data: {
+            titulo: 'Erro ao editar o registro!',
+            descricao: 'Não conseguimos editar seu registro, favor tentar novamente mais tarde',
+            corBtnSucesso: 'warn',
+            btnSucesso: 'Fechar'
+          } as Alerta
+        };
+        this.dialog.open(AlertaComponent, config);
+      });
   }
 
 }

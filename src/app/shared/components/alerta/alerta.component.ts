@@ -19,11 +19,12 @@ export class AlertaComponent implements OnInit {
     possuirBtnFechar: false
   } as Alerta;
 
+  // Por se tratar de um formato diferente, não será necessário utilizar o @input, pois, se necessitarmos alterar algum campo, passaremos pelo parâmetro 'data' do construtor.
   constructor(public dialogRef: MatDialogRef<AlertaComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Alerta) { }
+    @Inject(MAT_DIALOG_DATA) public data: Alerta) { }
 
   ngOnInit() {
-    if (this.data) {
+    if (this.data) { //Verificar se vai manter os valores padrão ou se vai alterar pelo parâmetro passado por data.
       this.alerta.titulo = this.data.titulo || this.alerta.titulo;
       this.alerta.descricao = this.data.descricao || this.alerta.descricao;
       this.alerta.btnSucesso = this.data.btnSucesso || this.alerta.btnSucesso;

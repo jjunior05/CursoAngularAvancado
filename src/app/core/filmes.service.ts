@@ -12,8 +12,10 @@ const url = 'http://localhost:3000/filmes/';
 })
 export class FilmesService {
 
+  // Criado um modelo / interface Filme para modelar os campos necessários para a API de Filme. Nosso serviço exigirá sempre este modelo.
+
   constructor(private http: HttpClient,
-              private configService: ConfigParamsService) { }
+    private configService: ConfigParamsService) { }
 
   salvar(filme: Filme): Observable<Filme> {
     return this.http.post<Filme>(url, filme);
@@ -25,7 +27,7 @@ export class FilmesService {
 
   listar(config: ConfigPrams): Observable<Filme[]> {
     const configPrams = this.configService.configurarParametros(config);
-    return this.http.get<Filme[]>(url, {params: configPrams});
+    return this.http.get<Filme[]>(url, { params: configPrams });
   }
 
   visualizar(id: number): Observable<Filme> {
