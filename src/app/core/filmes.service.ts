@@ -32,7 +32,7 @@ export class FilmesService {
   }
 
   visualizar(id: number): Observable<Filme> {
-    return this.http.get<Filme>(url + id);
+    return this.http.get<Filme>(url + id); //no método GET do http, ele já reconhece que a URL é do tipo string e vai concatenar com o ID passado por parâmetro
   }
 
   excluir(id: number): Observable<void> {

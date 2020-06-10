@@ -36,7 +36,7 @@ export class ListagemFilmesComponent implements OnInit {
 
     // Criado uma interface de configuração 'config-params', preenchendo este tipo com os valores do formGroup 'filtrosListagem'
     this.filtrosListagem.get('texto').valueChanges
-      .pipe(debounceTime(400))
+      .pipe(debounceTime(400)) //garante que a requiseção será realizada após um determinado tempo
       .subscribe((val: string) => {
         this.config.pesquisa = val;
         this.resetarConsulta();
