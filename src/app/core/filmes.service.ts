@@ -25,6 +25,7 @@ export class FilmesService {
     return this.http.put<Filme>(url + filme.id, filme);
   }
 
+  //Criada uma interface de parâmetros para receber os valores.
   listar(config: ConfigPrams): Observable<Filme[]> {
     const configPrams = this.configService.configurarParametros(config);
     return this.http.get<Filme[]>(url, { params: configPrams });
