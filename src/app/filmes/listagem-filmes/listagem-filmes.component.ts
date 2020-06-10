@@ -5,6 +5,7 @@ import { debounceTime } from 'rxjs/operators';
 import { FilmesService } from 'src/app/core/filmes.service';
 import { Filme } from 'src/app/shared/models/filme';
 import { ConfigPrams } from 'src/app/shared/models/config-prams';
+import { OpcaoFilmesService } from '../../core/opcoes.service';
 
 @Component({
   selector: 'dio-listagem-filmes',
@@ -23,8 +24,9 @@ export class ListagemFilmesComponent implements OnInit {
   generos: Array<string>;
 
   constructor(private filmesService: FilmesService,
-              private fb: FormBuilder,
-              private router: Router) { }
+    private opcaoService: OpcaoFilmesService,
+    private fb: FormBuilder,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.filtrosListagem = this.fb.group({
@@ -32,21 +34,23 @@ export class ListagemFilmesComponent implements OnInit {
       genero: ['']
     });
 
+    // Criado uma interface de configuração 'config-params', preenchendo este tipo com os valores do formGroup 'filtrosListagem'
     this.filtrosListagem.get('texto').valueChanges
-    .pipe(debounceTime(400))
-    .subscribe((val: string) => {
-      this.config.pesquisa = val;
-      this.resetarConsulta();
-    });
+      .pipe(debounceTime(400))
+      .subscribe((val: string) => {
+        this.config.pesquisa = val;
+        this.resetarConsulta();
+      });
 
     this.filtrosListagem.get('genero').valueChanges.subscribe((val: string) => {
-      this.config.campo = {tipo: 'genero', valor: val};
+      this.config.campo = { tipo: 'genero', valor: val };
       this.resetarConsulta();
     });
 
-    this.generos = ['Ação', 'Romance', 'Aventura', 'Terror', 'Ficção cientifica', 'Comédia', 'Aventura', 'Drama'];
+
 
     this.listarFilmes();
+    this.generos = this.opcaoService.retornarOpcao();
   }
 
   onScroll(): void {
@@ -60,7 +64,7 @@ export class ListagemFilmesComponent implements OnInit {
   private listarFilmes(): void {
     this.config.pagina++;
     this.filmesService.listar(this.config)
-      .subscribe((filmes: Filme[]) => this.filmes.push(...filmes));
+      .subscribe((filmes: Filme[]) => this.filmes.push(...filmes)); // '...' serve para o typescript entender que estamos dando um merger num array passando uma lista
   }
 
   private resetarConsulta(): void {

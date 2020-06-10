@@ -7,6 +7,7 @@ import { Filme } from 'src/app/shared/models/filme';
 import { FilmesService } from 'src/app/core/filmes.service';
 import { AlertaComponent } from 'src/app/shared/components/alerta/alerta.component';
 import { Alerta } from 'src/app/shared/models/alerta';
+import { OpcaoFilmesService } from '../../core/opcoes.service';
 
 @Component({
   selector: 'dio-cadastro-filmes',
@@ -23,6 +24,7 @@ export class CadastroFilmesComponent implements OnInit {
     public dialog: MatDialog,
     private fb: FormBuilder,
     private filmeService: FilmesService,
+    private opcaoService: OpcaoFilmesService,
     private router: Router,
     private activatedRoute: ActivatedRoute) { }
 
@@ -39,7 +41,7 @@ export class CadastroFilmesComponent implements OnInit {
       this.criarFormulario(this.criarFilmeEmBranco());
     }
 
-    this.generos = ['Ação', 'Romance', 'Aventura', 'Terror', 'Ficção cientifica', 'Comédia', 'Aventura', 'Drama'];
+    this.generos = this.opcaoService.retornarOpcao();
 
   }
 
